@@ -1,0 +1,23 @@
+{
+  "name": "bosco",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon dist/app.js",
+    "cmds": "node dist/register.js",
+    "watch": "tsc -w"
+  },
+  "dependencies": {
+    "@discordjs/builders": "^1.1.0",
+    "@discordjs/rest": "^1.0.1",
+    "axios": "^0.27.2",
+    "discord.js": "^14.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^18.6.3",
+    "dotenv": "^16.0.1",
+    "nodemon": "^2.0.19",
+    "typescript": "^4.7.4"
+  }
+}
