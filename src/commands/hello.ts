@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { ChatInputCommandInteraction } from "discord.js";
+import { ChatInputCommandInteraction, CommandInteraction } from "discord.js";
 
 const helloCommand = new SlashCommandBuilder()
   .setName("hello")
@@ -8,6 +8,8 @@ const helloCommand = new SlashCommandBuilder()
 module.exports = {
   data: helloCommand,
   execute: async (interaction: ChatInputCommandInteraction) => {
-    await interaction.reply("hello");
-  },
+    await interaction.deferReply();
+    setTimeout(() => {}, 2000);
+    await interaction.editReply("hello");
+  }
 };
