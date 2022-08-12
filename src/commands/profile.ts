@@ -14,7 +14,7 @@ const data = new SlashCommandBuilder()
 module.exports = {
   data,
   execute: async (interaction: ChatInputCommandInteraction) => {
-    const { command, member } = interaction;
+    const { member } = interaction;
     const embed = new EmbedBuilder().setTitle(
       member?.user.username! + "#" + member?.user.discriminator
     );
