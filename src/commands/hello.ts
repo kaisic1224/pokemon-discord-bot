@@ -9,5 +9,5 @@ module.exports = {
   data: helloCommand,
   execute: async (interaction: ChatInputCommandInteraction) => {
     await interaction.reply("hello");
-  }
+  },
 };

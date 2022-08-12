@@ -8,13 +8,12 @@ const client = new Client({
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent
-  ]
+    GatewayIntentBits.MessageContent,
+  ],
 });
 
 client.once("ready", () => {
   console.log(`Logged in as ${client.user?.tag}!`);
-  axios.get("");
 });
 
 client.on("interactionCreate", async (interaction) => {
@@ -22,11 +21,7 @@ client.on("interactionCreate", async (interaction) => {
 
   const { command, member, commandName } = interaction;
 
-  if (commandName === "ping") {
-    await interaction.reply(blockQuote("XD"));
-  } else if (commandName === "hello") {
-    require("./commands/" + commandName).execute(interaction);
-  }
+  require("./commands/" + commandName).execute(interaction);
 });
 
 client.login(process.env.BOT_TOKEN);
