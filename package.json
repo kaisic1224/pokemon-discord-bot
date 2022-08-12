@@ -12,7 +12,8 @@
     "@discordjs/builders": "^1.1.0",
     "@discordjs/rest": "^1.0.1",
     "axios": "^0.27.2",
-    "discord.js": "^14.1.2"
+    "discord.js": "^14.1.2",
+    "mongoose": "^6.5.2"
   },
   "devDependencies": {
     "@types/node": "^18.6.3",

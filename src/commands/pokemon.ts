@@ -1,7 +1,7 @@
 import { SlashCommandBuilder, EmbedBuilder } from "@discordjs/builders";
 import {
   ChatInputCommandInteraction,
-  IntegrationExpireBehavior,
+  IntegrationExpireBehavior
 } from "discord.js";
 import axios from "axios";
 import { join } from "path";
@@ -64,7 +64,7 @@ module.exports = {
       .setDescription(pokemon2.types.join())
       .setColor(typeMap.get(pokemon2.types[0]));
     await interaction.reply({ embeds: [pokemon1] });
-  },
+  }
 };
 
 const fetchPokemon = async (pokemon: string) => {
@@ -79,7 +79,7 @@ const fetchPokemon = async (pokemon: string) => {
     }),
     base_stat: singlePoke.data.stats[0].base_stat,
     ability: singlePoke.data.moves[getRandomInt(0, numAbilities)],
-    skill: singlePoke.data.moves[getRandomInt(0, numMoves)],
+    skill: singlePoke.data.moves[getRandomInt(0, numMoves)]
   };
   return retval;
 };
