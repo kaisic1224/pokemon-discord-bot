@@ -81,7 +81,16 @@ module.exports = {
             yield (0, mongo_1.default)();
             if (i.customId === "Catch") {
                 try {
-                    const user = yield User_1.default.find({ tag: interaction.user.tag }).exec();
+                    const user = yield User_1.default.findOneAndUpdate({
+                        tag: interaction.user.tag
+                    }, {
+                        tag: interaction.user.tag,
+                        // add new pokemon to their array
+                        $push: { pokemon: pokemon2 },
+                        lastClaimed: 0,
+                        // increase their encounter number by 1
+                        $inc: { totalEncounters: 1 }
+                    }, { upsert: true, new: true }).exec();
                     console.log(user);
                     yield i.editReply("YES MAN");
                 }
@@ -90,7 +99,7 @@ module.exports = {
                 }
             }
             else {
-                yield i.editReply(`The wild ${pokemon2.name} escaped!`);
+                yield i.editReply(`The wild ${pokemon2.name} has escaped!`);
             }
         }));
         yield interaction.reply({ embeds: [pokemon1], components: [confirmCatch] });

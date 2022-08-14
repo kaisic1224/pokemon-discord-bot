@@ -1,7 +1,7 @@
 import { Schema, model, models } from "mongoose";
 
 const pokemonSchema = new Schema({
-  name: { type: String },
+  name: { type: String, uppercase: true },
   image: { type: String },
   types: { type: [String] },
   base_stat: { type: Number },
@@ -21,7 +21,7 @@ const userSchema = new Schema({
     type: String,
     unique: true
   },
-  pokemons: {
+  pokemon: {
     type: [pokemonSchema]
   },
   lastClaimed: { type: Number },

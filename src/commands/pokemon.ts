@@ -120,14 +120,27 @@ module.exports = {
       await connectToDB();
       if (i.customId === "Catch") {
         try {
-          const user = await User.find({ tag: interaction.user.tag }).exec();
+          const user = await User.findOneAndUpdate(
+            {
+              tag: interaction.user.tag
+            },
+            {
+              tag: interaction.user.tag,
+              // add new pokemon to their array
+              $push: { pokemon: pokemon2 },
+              lastClaimed: 0,
+              // increase their encounter number by 1
+              $inc: { totalEncounters: 1 }
+            },
+            { upsert: true, new: true }
+          ).exec();
           console.log(user);
           await i.editReply("YES MAN");
         } catch (err) {
           console.log(err);
         }
       } else {
-        await i.editReply(`The wild ${pokemon2.name} escaped!`);
+        await i.editReply(`The wild ${pokemon2.name} has escaped!`);
       }
     });
 

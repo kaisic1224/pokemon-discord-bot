@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const pokemonSchema = new mongoose_1.Schema({
-    name: { type: String },
+    name: { type: String, uppercase: true },
     image: { type: String },
     types: { type: [String] },
     base_stat: { type: Number },
@@ -21,7 +21,7 @@ const userSchema = new mongoose_1.Schema({
         type: String,
         unique: true
     },
-    pokemons: {
+    pokemon: {
         type: [pokemonSchema]
     },
     lastClaimed: { type: Number },
