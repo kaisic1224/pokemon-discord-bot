@@ -1,6 +1,20 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, models } from "mongoose";
 
-const pokemonSchema = new Schema({});
+const pokemonSchema = new Schema({
+  name: { type: String },
+  image: { type: String },
+  types: { type: [String] },
+  base_stat: { type: Number },
+  ability: {
+    name: { type: String },
+    url: { type: String }
+  },
+  skill: {
+    name: { type: String },
+    url: { type: String }
+  },
+  encounter: { type: String }
+});
 
 const userSchema = new Schema({
   tag: {
@@ -9,9 +23,11 @@ const userSchema = new Schema({
   },
   pokemons: {
     type: [pokemonSchema]
-  }
+  },
+  lastClaimed: { type: Number },
+  totalEncounters: { type: Number }
 });
 
-const User = model("User", userSchema);
+const User = models.Mentor || model("User", userSchema);
 
-module.exports = User;
+export default User;

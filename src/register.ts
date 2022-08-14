@@ -10,7 +10,7 @@ import path from "path";
 
 interface command {
   data: SlashCommandBuilder;
-  execut: Function;
+  execute: Function;
 }
 
 const cmdsPath = path.join(__dirname, "commands");
