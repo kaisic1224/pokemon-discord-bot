@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { model, models, Schema } from "mongoose";
 
 const bankSchema = new Schema({
   items: {
@@ -11,6 +11,6 @@ const bankSchema = new Schema({
   }
 });
 
-const Bank = model("Bank", bankSchema);
+const Bank = models.Bank || model("Bank", bankSchema);
 
-module.exports = Bank;
+export default Bank;

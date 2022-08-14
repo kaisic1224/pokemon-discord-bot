@@ -1,10 +1,17 @@
-import { SlashCommandBuilder, EmbedBuilder } from "@discordjs/builders";
 import {
+  SlashCommandBuilder,
+  EmbedBuilder,
+  ButtonBuilder
+} from "@discordjs/builders";
+import {
+  ActionRowBuilder,
+  ButtonStyle,
   ChatInputCommandInteraction,
-  IntegrationExpireBehavior
+  MessageComponentInteraction
 } from "discord.js";
 import axios from "axios";
-import { join } from "path";
+import connectToDB from "../mongodb/mongo";
+import User from "../mongodb/models/User";
 
 const typeMap = new Map();
 typeMap.set("normal", [168, 168, 120]);
@@ -43,6 +50,7 @@ interface PokemonProfile {
   base_stat: number;
   ability: Ability;
   skill: Move;
+  encounter: string;
 }
 
 const getPokemon = new SlashCommandBuilder()
@@ -52,18 +60,78 @@ const getPokemon = new SlashCommandBuilder()
 module.exports = {
   data: getPokemon,
   execute: async (interaction: ChatInputCommandInteraction) => {
+    const { member } = interaction;
     const pokeData = await axios.get(
       "https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0"
     );
     const pokemon2: PokemonProfile = await fetchPokemon(
       pokeData.data.results[getRandomInt(0, pokeData.data.results.length)].url
     );
+
     const pokemon1 = new EmbedBuilder()
-      .setTitle(pokemon2.name)
+      .setTitle(pokemon2.name.toUpperCase())
       .setImage(pokemon2.image)
-      .setDescription(pokemon2.types.join())
+      .setDescription(
+        `${
+          member?.user.username
+        } was ${pokemon2.encounter.toLowerCase()}, and then...`
+      )
+      .setFields(
+        pokemon2.types.map((type) => ({
+          name: "\u200B",
+          value:
+            "```fix\n" +
+            type.charAt(0).toUpperCase() +
+            type.substring(1) +
+            "```",
+          inline: true
+        }))
+      )
       .setColor(typeMap.get(pokemon2.types[0]));
-    await interaction.reply({ embeds: [pokemon1] });
+
+    const confirmCatch = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      new ButtonBuilder()
+        .setStyle(ButtonStyle.Success)
+        .setLabel("Catch")
+        .setCustomId("Catch"),
+      new ButtonBuilder()
+        .setStyle(ButtonStyle.Danger)
+        .setCustomId("Don't catch")
+        .setLabel("Don't catch")
+    );
+
+    const filter = (i: MessageComponentInteraction) =>
+      i.customId === "Catch" || i.customId === "Don't catch";
+
+    const collector = interaction.channel?.createMessageComponentCollector({
+      filter: filter,
+      time: 5000
+    });
+
+    collector?.on("collect", async (i) => {
+      await interaction.editReply({
+        components: [
+          confirmCatch.setComponents(
+            confirmCatch.components.map((button) => button.setDisabled())
+          )
+        ]
+      });
+      await i.deferReply();
+      await connectToDB();
+      if (i.customId === "Catch") {
+        try {
+          const user = await User.find({ tag: interaction.user.tag }).exec();
+          console.log(user);
+          await i.editReply("YES MAN");
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        await i.editReply(`The wild ${pokemon2.name} escaped!`);
+      }
+    });
+
+    await interaction.reply({ embeds: [pokemon1], components: [confirmCatch] });
   }
 };
 
@@ -71,6 +139,25 @@ const fetchPokemon = async (pokemon: string) => {
   const singlePoke = await axios.get(pokemon);
   const numMoves = singlePoke.data.moves.length;
   const numAbilities = singlePoke.data.abilities.length;
+
+  // Fetch list of locations the pokemon could be in (comes in an array of locations)
+  const pokeEncounter = await axios.get(
+    singlePoke.data.location_area_encounters
+  );
+  // Generate a random index out of the possible list of locations and select that specific location
+  const randomArea = getRandomInt(0, pokeEncounter.data.length - 1);
+
+  // Check if there is a valid location at that index, and use that as the encounter-method url, otherwise default any falsely values back to first encounter method
+  const encounterUrl =
+    pokeEncounter.data[randomArea]?.version_details[0].encounter_details[0]
+      .method.url || "https://pokeapi.co/api/v2/encounter-method/1/";
+
+  // Fetch the quote for encounter method but make sure it is in english
+  const encounterMethodRes = await axios.get(encounterUrl);
+  const encounterMethod = encounterMethodRes.data.names.filter(
+    (item: any) => item.language.name === "en"
+  )[0].name;
+
   const retval: PokemonProfile = {
     name: singlePoke.data.name,
     image: singlePoke.data.sprites.front_default,
@@ -79,7 +166,8 @@ const fetchPokemon = async (pokemon: string) => {
     }),
     base_stat: singlePoke.data.stats[0].base_stat,
     ability: singlePoke.data.moves[getRandomInt(0, numAbilities)],
-    skill: singlePoke.data.moves[getRandomInt(0, numMoves)]
+    skill: singlePoke.data.moves[getRandomInt(0, numMoves)],
+    encounter: encounterMethod
   };
   return retval;
 };

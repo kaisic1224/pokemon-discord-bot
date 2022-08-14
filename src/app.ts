@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { Client, GatewayIntentBits, blockQuote } from "discord.js";
+import { Client, GatewayIntentBits, blockQuote, Collection } from "discord.js";
 
 const client = new Client({
   intents: [
@@ -16,7 +16,7 @@ client.once("ready", () => {
 
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isCommand()) return;
-  const { command, member, commandName } = interaction;
+  const { commandName } = interaction;
   require("./commands/" + commandName).execute(interaction);
 });
 
