@@ -141,6 +141,7 @@ module.exports = {
         }
       } else {
         await i.editReply(`The wild ${pokemon2.name} has escaped!`);
+        console.log("yes");
       }
     });
 

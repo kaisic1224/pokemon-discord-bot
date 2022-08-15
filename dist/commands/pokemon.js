@@ -100,6 +100,7 @@ module.exports = {
             }
             else {
                 yield i.editReply(`The wild ${pokemon2.name} has escaped!`);
+                console.log("yes");
             }
         }));
         yield interaction.reply({ embeds: [pokemon1], components: [confirmCatch] });
