@@ -5,6 +5,7 @@ import {
 } from "@discordjs/builders";
 import {
   ActionRowBuilder,
+  APIMessageComponentEmoji,
   ButtonStyle,
   ChatInputCommandInteraction,
   MessageComponentInteraction
@@ -109,6 +110,7 @@ module.exports = {
     });
 
     collector?.on("collect", async (i) => {
+      // Set buttons to disabled
       await interaction.editReply({
         components: [
           confirmCatch.setComponents(
@@ -116,9 +118,12 @@ module.exports = {
           )
         ]
       });
+      // Make the bot send a thinking message so message does not expire while it connects to database and queries other informations
       await i.deferReply();
       await connectToDB();
+
       if (i.customId === "Catch") {
+        // if they choose to catch, find the document, and create it if it doesn't exist
         try {
           const user = await User.findOneAndUpdate(
             {
@@ -135,13 +140,29 @@ module.exports = {
             { upsert: true, new: true }
           ).exec();
           console.log(user);
-          await i.editReply("YES MAN");
+          await i.editReply(
+            `${interaction.user.tag} has caught ${pokemon2.name} sucessfully!`
+          );
+          const pokemonName =
+            new ActionRowBuilder<ButtonBuilder>().addComponents(
+              new ButtonBuilder()
+                .setStyle(ButtonStyle.Success)
+                .setEmoji("\u2714" as APIMessageComponentEmoji)
+                .setCustomId("Yes"),
+              new ButtonBuilder()
+                .setStyle(ButtonStyle.Danger)
+                .setCustomId("Don't catch")
+                .setLabel("Don't catch")
+            );
+          await i.followUp({
+            content: `Would you like to give it a name?`,
+            components: [pokemonName]
+          });
         } catch (err) {
           console.log(err);
         }
       } else {
         await i.editReply(`The wild ${pokemon2.name} has escaped!`);
-        console.log("yes");
       }
     });
 
