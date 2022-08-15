@@ -22,11 +22,10 @@ module.exports = {
     data: dailyCommand,
     execute: (interaction) => __awaiter(void 0, void 0, void 0, function* () {
         yield interaction.deferReply();
-        setTimeout(() => { }, 2000);
         yield (0, mongo_1.default)();
         try {
             const user = yield User_1.default.findOne({
-                tag: interaction.user.tag,
+                tag: interaction.user.tag
             }).exec();
             console.log(user);
             yield interaction.editReply("Hello tracer is here!");
@@ -34,5 +33,5 @@ module.exports = {
         catch (err) {
             console.log(err);
         }
-    }),
+    })
 };

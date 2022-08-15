@@ -11,16 +11,15 @@ module.exports = {
   data: dailyCommand,
   execute: async (interaction: ChatInputCommandInteraction) => {
     await interaction.deferReply();
-    setTimeout(() => {}, 2000);
     await connectToDB();
     try {
       const user = await User.findOne({
-        tag: interaction.user.tag,
+        tag: interaction.user.tag
       }).exec();
       console.log(user);
       await interaction.editReply("Hello tracer is here!");
     } catch (err) {
       console.log(err);
     }
-  },
+  }
 };
