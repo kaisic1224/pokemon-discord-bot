@@ -82,7 +82,7 @@ module.exports = {
             yield i.deferReply();
             yield (0, mongo_1.default)();
             if (i.customId === "Catch") {
-                // if they choose to catch, find the document, and create it if it doesn't exist
+                // if they choose to catch, find the document and update it, but create it if it doesn't exist
                 try {
                     const user = yield User_1.default.findOneAndUpdate({
                         tag: interaction.user.tag
@@ -98,11 +98,11 @@ module.exports = {
                     yield i.editReply(`${interaction.user.tag} has caught ${pokemon2.name} sucessfully!`);
                     const pokemonName = new discord_js_1.ActionRowBuilder().addComponents(new builders_1.ButtonBuilder()
                         .setStyle(discord_js_1.ButtonStyle.Success)
-                        .setEmoji("\u2714")
+                        .setEmoji({ name: "\u2714" })
                         .setCustomId("Yes"), new builders_1.ButtonBuilder()
                         .setStyle(discord_js_1.ButtonStyle.Danger)
                         .setCustomId("Don't catch")
-                        .setLabel("Don't catch"));
+                        .setEmoji({ name: "\u2716" }));
                     yield i.followUp({
                         content: `Would you like to give it a name?`,
                         components: [pokemonName]

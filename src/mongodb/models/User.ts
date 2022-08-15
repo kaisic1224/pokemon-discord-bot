@@ -25,7 +25,8 @@ const userSchema = new Schema({
     type: [pokemonSchema]
   },
   lastClaimed: { type: Number },
-  totalEncounters: { type: Number }
+  totalEncounters: { type: Number },
+  money: { type: Number }
 });
 
 const User = models.Mentor || model("User", userSchema);
