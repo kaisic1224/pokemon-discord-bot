@@ -26,9 +26,10 @@ module.exports = {
         const { client, member, options } = interaction;
         yield interaction.deferReply();
         yield (0, mongo_1.default)();
-        User_1.default.
-        ;
         const user = (_b = (_a = options.get("user")) === null || _a === void 0 ? void 0 : _a.user) !== null && _b !== void 0 ? _b : member === null || member === void 0 ? void 0 : member.user;
+        const dbUser = yield User_1.default.find({
+            tag: `${user === null || user === void 0 ? void 0 : user.username}#${user === null || user === void 0 ? void 0 : user.discriminator}`
+        }).exec();
         const embed = new discord_js_1.EmbedBuilder()
             .setTitle(`${user === null || user === void 0 ? void 0 : user.username}#${user === null || user === void 0 ? void 0 : user.discriminator}`)
             .setThumbnail(user.displayAvatarURL())
