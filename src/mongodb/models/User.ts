@@ -7,25 +7,26 @@ const pokemonSchema = new Schema({
   base_stat: { type: Number },
   ability: {
     name: { type: String },
-    url: { type: String }
+    url: { type: String },
   },
   skill: {
     name: { type: String },
-    url: { type: String }
+    url: { type: String },
   },
-  encounter: { type: String }
+  encounter: { type: String },
 });
 
 const userSchema = new Schema({
   tag: {
     type: String,
-    unique: true
+    unique: true,
   },
   pokemon: {
-    type: [pokemonSchema]
+    type: [pokemonSchema],
   },
   lastClaimed: { type: Number },
-  totalEncounters: { type: Number }
+  totalEncounters: { type: Number },
+  money: { type: Number },
 });
 
 const User = models.Mentor || model("User", userSchema);
