@@ -72,14 +72,17 @@ module.exports = {
             time: 5000
         });
         collector === null || collector === void 0 ? void 0 : collector.on("collect", (i) => __awaiter(void 0, void 0, void 0, function* () {
+            // Set buttons to disabled
             yield interaction.editReply({
                 components: [
                     confirmCatch.setComponents(confirmCatch.components.map((button) => button.setDisabled()))
                 ]
             });
+            // Make the bot send a thinking message so message does not expire while it connects to database and queries other informations
             yield i.deferReply();
             yield (0, mongo_1.default)();
             if (i.customId === "Catch") {
+                // if they choose to catch, find the document, and create it if it doesn't exist
                 try {
                     const user = yield User_1.default.findOneAndUpdate({
                         tag: interaction.user.tag
@@ -92,7 +95,18 @@ module.exports = {
                         $inc: { totalEncounters: 1 }
                     }, { upsert: true, new: true }).exec();
                     console.log(user);
-                    yield i.editReply("YES MAN");
+                    yield i.editReply(`${interaction.user.tag} has caught ${pokemon2.name} sucessfully!`);
+                    const pokemonName = new discord_js_1.ActionRowBuilder().addComponents(new builders_1.ButtonBuilder()
+                        .setStyle(discord_js_1.ButtonStyle.Success)
+                        .setEmoji("\u2714")
+                        .setCustomId("Yes"), new builders_1.ButtonBuilder()
+                        .setStyle(discord_js_1.ButtonStyle.Danger)
+                        .setCustomId("Don't catch")
+                        .setLabel("Don't catch"));
+                    yield i.followUp({
+                        content: `Would you like to give it a name?`,
+                        components: [pokemonName]
+                    });
                 }
                 catch (err) {
                     console.log(err);
