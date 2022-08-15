@@ -25,7 +25,8 @@ const userSchema = new mongoose_1.Schema({
         type: [pokemonSchema]
     },
     lastClaimed: { type: Number },
-    totalEncounters: { type: Number }
+    totalEncounters: { type: Number },
+    money: { type: Number }
 });
 const User = mongoose_1.models.Mentor || (0, mongoose_1.model)("User", userSchema);
 exports.default = User;
