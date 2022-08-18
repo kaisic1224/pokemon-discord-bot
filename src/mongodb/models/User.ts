@@ -16,6 +16,18 @@ const pokemonSchema = new Schema({
   encounter: { type: String }
 });
 
+const itemSchema = new Schema({
+  count: { type: Number },
+  name: { type: String },
+  effect: { type: String }
+});
+
+const bagSchema = new Schema({
+  items: {
+    countable: { type: [{}] }
+  }
+});
+
 const userSchema = new Schema({
   tag: {
     type: String,
@@ -24,9 +36,10 @@ const userSchema = new Schema({
   pokemon: {
     type: [pokemonSchema]
   },
-  lastClaimed: { type: Number },
+  lastClaimed: { type: Number, default: 0 },
   totalEncounters: { type: Number },
-  money: { type: Number }
+  money: { type: Number, default: 0 },
+  inventory: { type: bagSchema }
 });
 
 const User = models.Mentor || model("User", userSchema);

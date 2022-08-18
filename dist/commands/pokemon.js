@@ -91,10 +91,9 @@ module.exports = {
                         tag: interaction.user.tag,
                         // add new pokemon to their array
                         $push: { pokemon: pokemon2 },
-                        lastClaimed: 0,
                         // increase their encounter number by 1
-                        $inc: { totalEncounters: 1 },
-                    }, { upsert: true, new: true }).exec();
+                        $inc: { totalEncounters: 1 }
+                    }, { upsert: true, new: true, setDefaultsOnInsert: true }).exec();
                     console.log(user);
                     yield i.editReply(`${interaction.user.tag} has caught ${pokemon2.name} sucessfully!`);
                     const pokemonName = new discord_js_1.ActionRowBuilder().addComponents(new builders_1.ButtonBuilder()

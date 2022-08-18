@@ -34,7 +34,11 @@ module.exports = {
             .setTitle(`${user === null || user === void 0 ? void 0 : user.username}#${user === null || user === void 0 ? void 0 : user.discriminator}`)
             .setThumbnail(user.displayAvatarURL())
             .setDescription(`${user === null || user === void 0 ? void 0 : user.username}'s profile`)
-            .setFields([{ name: "\u200B", value: "xp: 🟩🟩🟩🟩🟩🟩" }]);
-        yield interaction.reply({ embeds: [embed] });
+            .setFields([
+            { name: "\u200B", value: "xp: 🟩🟩🟩🟩🟩🟩" },
+            { name: "\u200B", value: `Money: ${dbUser[0].money}` }
+        ]);
+        console.log(dbUser);
+        yield interaction.editReply({ embeds: [embed] });
     })
 };

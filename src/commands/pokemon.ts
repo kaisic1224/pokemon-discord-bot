@@ -5,7 +5,6 @@ import {
 } from "@discordjs/builders";
 import {
   ActionRowBuilder,
-  APIMessageComponentEmoji,
   ButtonStyle,
   ChatInputCommandInteraction,
   MessageComponentInteraction,
@@ -133,11 +132,10 @@ module.exports = {
               tag: interaction.user.tag,
               // add new pokemon to their array
               $push: { pokemon: pokemon2 },
-              lastClaimed: 0,
               // increase their encounter number by 1
               $inc: { totalEncounters: 1 },
             },
-            { upsert: true, new: true }
+            { upsert: true, new: true, setDefaultsOnInsert: true }
           ).exec();
           console.log(user);
           await i.editReply(

@@ -31,8 +31,12 @@ module.exports = {
       .setTitle(`${user?.username}#${user?.discriminator}`)
       .setThumbnail((user as discordUser).displayAvatarURL())
       .setDescription(`${user?.username}'s profile`)
-      .setFields([{ name: "\u200B", value: "xp: 🟩🟩🟩🟩🟩🟩" }]);
+      .setFields([
+        { name: "\u200B", value: "xp: 🟩🟩🟩🟩🟩🟩" },
+        { name: "\u200B", value: `Money: ${dbUser[0].money}` }
+      ]);
+    console.log(dbUser);
 
-    await interaction.reply({ embeds: [embed] });
+    await interaction.editReply({ embeds: [embed] });
   }
 };
