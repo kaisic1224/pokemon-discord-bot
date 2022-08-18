@@ -56,6 +56,6 @@ module.exports = {
     const items = await (
       await axios.get("https://pokeapi.co/api/v2/item?limit=100000&offset=0")
     ).data.results;
-    const shopEmbed = new EmbedBuilder().setTitle("Shop");
+    const shopEmbed = new EmbedBuilder().setTitle("Shop").setDescription("LOL");
   }
 };
