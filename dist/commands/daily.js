@@ -23,11 +23,10 @@ module.exports = {
     data: dailyCommand,
     execute: (interaction) => __awaiter(void 0, void 0, void 0, function* () {
         yield interaction.deferReply();
-        setTimeout(() => { }, 2000);
         yield (0, mongo_1.default)();
         try {
             const user = yield User_1.default.findOne({
-                tag: interaction.user.tag,
+                tag: interaction.user.tag
             }).exec();
             console.log(user);
             const randomDaily = (0, pokemon_1.getRandomInt)(2000, 6000);
@@ -42,5 +41,5 @@ module.exports = {
         catch (err) {
             console.log(err);
         }
-    }),
+    })
 };
