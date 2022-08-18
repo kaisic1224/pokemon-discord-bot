@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const builders_1 = require("@discordjs/builders");
 const mongo_1 = __importDefault(require("../mongodb/mongo"));
 const User_1 = __importDefault(require("../mongodb/models/User"));
+const pokemon_1 = require("./pokemon");
 const dailyCommand = new builders_1.SlashCommandBuilder()
     .setName("daily")
     .setDescription("get today's daily creds");
@@ -29,7 +30,14 @@ module.exports = {
                 tag: interaction.user.tag,
             }).exec();
             console.log(user);
-            yield interaction.editReply("Hello tracer is here!");
+            const randomDaily = (0, pokemon_1.getRandomInt)(2000, 6000);
+            if (user.lastClaimed >= user.lastClaimed + 2 * 60 * 60 * 1000) {
+                user.lastClaimed = Date.now();
+                user.money += randomDaily;
+            }
+            yield user.save();
+            console.log(user);
+            yield interaction.editReply(`You have gained ${randomDaily} poke credits today! You can claim you next one in 2 hours`);
         }
         catch (err) {
             console.log(err);

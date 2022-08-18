@@ -8,25 +8,25 @@ const pokemonSchema = new mongoose_1.Schema({
     base_stat: { type: Number },
     ability: {
         name: { type: String },
-        url: { type: String }
+        url: { type: String },
     },
     skill: {
         name: { type: String },
-        url: { type: String }
+        url: { type: String },
     },
-    encounter: { type: String }
+    encounter: { type: String },
 });
 const userSchema = new mongoose_1.Schema({
     tag: {
         type: String,
-        unique: true
+        unique: true,
     },
     pokemon: {
-        type: [pokemonSchema]
+        type: [pokemonSchema],
     },
     lastClaimed: { type: Number },
     totalEncounters: { type: Number },
-    money: { type: Number }
+    money: { type: Number },
 });
 const User = mongoose_1.models.Mentor || (0, mongoose_1.model)("User", userSchema);
 exports.default = User;
