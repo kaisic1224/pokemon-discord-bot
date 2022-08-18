@@ -92,7 +92,7 @@ module.exports = {
                         // add new pokemon to their array
                         $push: { pokemon: pokemon2 },
                         // increase their encounter number by 1
-                        $inc: { totalEncounters: 1 }
+                        $inc: { totalEncounters: 1 },
                     }, { upsert: true, new: true, setDefaultsOnInsert: true }).exec();
                     console.log(user);
                     yield i.editReply(`${interaction.user.tag} has caught ${pokemon2.name} sucessfully!`);
