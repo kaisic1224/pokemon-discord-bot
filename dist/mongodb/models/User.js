@@ -20,6 +20,7 @@ const itemSchema = new mongoose_1.Schema({
     count: { type: Number },
     name: { type: String },
     effect: { type: String },
+    flavour_text: { type: String },
     cost: { type: Number },
     image: { type: String }
 });
