@@ -10,6 +10,10 @@ const client = new Client({
   ]
 });
 
+const refreshShop = async () => {
+  let timeout = setTimeout(() => {}, 24);
+};
+
 client.once("ready", () => {
   console.log(`Logged in as ${client.user?.tag}!`);
 });

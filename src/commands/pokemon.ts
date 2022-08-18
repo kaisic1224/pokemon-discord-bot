@@ -1,14 +1,13 @@
 import {
   SlashCommandBuilder,
   EmbedBuilder,
-  ButtonBuilder
+  ButtonBuilder,
 } from "@discordjs/builders";
 import {
   ActionRowBuilder,
-  APIMessageComponentEmoji,
   ButtonStyle,
   ChatInputCommandInteraction,
-  MessageComponentInteraction
+  MessageComponentInteraction,
 } from "discord.js";
 import axios from "axios";
 import connectToDB from "../mongodb/mongo";
@@ -85,7 +84,7 @@ module.exports = {
             type.charAt(0).toUpperCase() +
             type.substring(1) +
             "```",
-          inline: true
+          inline: true,
         }))
       )
       .setColor(typeMap.get(pokemon2.types[0]));
@@ -106,7 +105,7 @@ module.exports = {
 
     const collector = interaction.channel?.createMessageComponentCollector({
       filter: filter,
-      time: 5000
+      time: 5000,
     });
 
     collector?.on("collect", async (i) => {
@@ -115,29 +114,28 @@ module.exports = {
         components: [
           confirmCatch.setComponents(
             confirmCatch.components.map((button) => button.setDisabled())
-          )
-        ]
+          ),
+        ],
       });
       // Make the bot send a thinking message so message does not expire while it connects to database and queries other informations
       await i.deferReply();
       await connectToDB();
 
       if (i.customId === "Catch") {
-        // if they choose to catch, find the document, and create it if it doesn't exist
+        // if they choose to catch, find the document and update it, but create it if it doesn't exist
         try {
           const user = await User.findOneAndUpdate(
             {
-              tag: interaction.user.tag
+              tag: interaction.user.tag,
             },
             {
               tag: interaction.user.tag,
               // add new pokemon to their array
               $push: { pokemon: pokemon2 },
-              lastClaimed: 0,
               // increase their encounter number by 1
-              $inc: { totalEncounters: 1 }
+              $inc: { totalEncounters: 1 },
             },
-            { upsert: true, new: true }
+            { upsert: true, new: true, setDefaultsOnInsert: true }
           ).exec();
           console.log(user);
           await i.editReply(
@@ -147,16 +145,16 @@ module.exports = {
             new ActionRowBuilder<ButtonBuilder>().addComponents(
               new ButtonBuilder()
                 .setStyle(ButtonStyle.Success)
-                .setEmoji("\u2714" as APIMessageComponentEmoji)
+                .setEmoji({ name: "\u2714" })
                 .setCustomId("Yes"),
               new ButtonBuilder()
                 .setStyle(ButtonStyle.Danger)
                 .setCustomId("Don't catch")
-                .setLabel("Don't catch")
+                .setEmoji({ name: "\u2716" })
             );
           await i.followUp({
             content: `Would you like to give it a name?`,
-            components: [pokemonName]
+            components: [pokemonName],
           });
         } catch (err) {
           console.log(err);
@@ -167,7 +165,7 @@ module.exports = {
     });
 
     await interaction.reply({ embeds: [pokemon1], components: [confirmCatch] });
-  }
+  },
 };
 
 const fetchPokemon = async (pokemon: string) => {
@@ -202,12 +200,12 @@ const fetchPokemon = async (pokemon: string) => {
     base_stat: singlePoke.data.stats[0].base_stat,
     ability: singlePoke.data.moves[getRandomInt(0, numAbilities)],
     skill: singlePoke.data.moves[getRandomInt(0, numMoves)],
-    encounter: encounterMethod
+    encounter: encounterMethod,
   };
   return retval;
 };
 
-function getRandomInt(min: number, max: number) {
+export function getRandomInt(min: number, max: number) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive

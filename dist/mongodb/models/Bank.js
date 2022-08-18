@@ -6,7 +6,8 @@ const bankSchema = new mongoose_1.Schema({
         type: [
             {
                 name: { type: String },
-                stock: { type: Number }
+                stock: { type: Number },
+                effect: { type: String }
             }
         ]
     }

@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getRandomInt = void 0;
 const builders_1 = require("@discordjs/builders");
 const discord_js_1 = require("discord.js");
 const axios_1 = __importDefault(require("axios"));
@@ -56,7 +57,7 @@ module.exports = {
                 type.charAt(0).toUpperCase() +
                 type.substring(1) +
                 "```",
-            inline: true
+            inline: true,
         })))
             .setColor(typeMap.get(pokemon2.types[0]));
         const confirmCatch = new discord_js_1.ActionRowBuilder().addComponents(new builders_1.ButtonBuilder()
@@ -69,43 +70,42 @@ module.exports = {
         const filter = (i) => i.customId === "Catch" || i.customId === "Don't catch";
         const collector = (_a = interaction.channel) === null || _a === void 0 ? void 0 : _a.createMessageComponentCollector({
             filter: filter,
-            time: 5000
+            time: 5000,
         });
         collector === null || collector === void 0 ? void 0 : collector.on("collect", (i) => __awaiter(void 0, void 0, void 0, function* () {
             // Set buttons to disabled
             yield interaction.editReply({
                 components: [
-                    confirmCatch.setComponents(confirmCatch.components.map((button) => button.setDisabled()))
-                ]
+                    confirmCatch.setComponents(confirmCatch.components.map((button) => button.setDisabled())),
+                ],
             });
             // Make the bot send a thinking message so message does not expire while it connects to database and queries other informations
             yield i.deferReply();
             yield (0, mongo_1.default)();
             if (i.customId === "Catch") {
-                // if they choose to catch, find the document, and create it if it doesn't exist
+                // if they choose to catch, find the document and update it, but create it if it doesn't exist
                 try {
                     const user = yield User_1.default.findOneAndUpdate({
-                        tag: interaction.user.tag
+                        tag: interaction.user.tag,
                     }, {
                         tag: interaction.user.tag,
                         // add new pokemon to their array
                         $push: { pokemon: pokemon2 },
-                        lastClaimed: 0,
                         // increase their encounter number by 1
-                        $inc: { totalEncounters: 1 }
-                    }, { upsert: true, new: true }).exec();
+                        $inc: { totalEncounters: 1 },
+                    }, { upsert: true, new: true, setDefaultsOnInsert: true }).exec();
                     console.log(user);
                     yield i.editReply(`${interaction.user.tag} has caught ${pokemon2.name} sucessfully!`);
                     const pokemonName = new discord_js_1.ActionRowBuilder().addComponents(new builders_1.ButtonBuilder()
                         .setStyle(discord_js_1.ButtonStyle.Success)
-                        .setEmoji("\u2714")
+                        .setEmoji({ name: "\u2714" })
                         .setCustomId("Yes"), new builders_1.ButtonBuilder()
                         .setStyle(discord_js_1.ButtonStyle.Danger)
                         .setCustomId("Don't catch")
-                        .setLabel("Don't catch"));
+                        .setEmoji({ name: "\u2716" }));
                     yield i.followUp({
                         content: `Would you like to give it a name?`,
-                        components: [pokemonName]
+                        components: [pokemonName],
                     });
                 }
                 catch (err) {
@@ -117,7 +117,7 @@ module.exports = {
             }
         }));
         yield interaction.reply({ embeds: [pokemon1], components: [confirmCatch] });
-    })
+    }),
 };
 const fetchPokemon = (pokemon) => __awaiter(void 0, void 0, void 0, function* () {
     var _b;
@@ -142,7 +142,7 @@ const fetchPokemon = (pokemon) => __awaiter(void 0, void 0, void 0, function* ()
         base_stat: singlePoke.data.stats[0].base_stat,
         ability: singlePoke.data.moves[getRandomInt(0, numAbilities)],
         skill: singlePoke.data.moves[getRandomInt(0, numMoves)],
-        encounter: encounterMethod
+        encounter: encounterMethod,
     };
     return retval;
 });
@@ -151,3 +151,4 @@ function getRandomInt(min, max) {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
 }
+exports.getRandomInt = getRandomInt;
