@@ -8,31 +8,33 @@ const pokemonSchema = new mongoose_1.Schema({
     base_stat: { type: Number },
     ability: {
         name: { type: String },
-        url: { type: String },
+        url: { type: String }
     },
     skill: {
         name: { type: String },
-        url: { type: String },
+        url: { type: String }
     },
-    encounter: { type: String },
+    encounter: { type: String }
 });
 const itemSchema = new mongoose_1.Schema({
     count: { type: Number },
     name: { type: String },
-    effect: { type: String }
+    effect: { type: String },
+    cost: { type: Number },
+    image: { type: String }
 });
 const bagSchema = new mongoose_1.Schema({
     items: {
-        countable: { type: [{}] }
+        countable: { type: [itemSchema] }
     }
 });
 const userSchema = new mongoose_1.Schema({
     tag: {
         type: String,
-        unique: true,
+        unique: true
     },
     pokemon: {
-        type: [pokemonSchema],
+        type: [pokemonSchema]
     },
     lastClaimed: { type: Number, default: 0 },
     totalEncounters: { type: Number },
