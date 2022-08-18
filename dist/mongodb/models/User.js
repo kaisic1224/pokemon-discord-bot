@@ -19,11 +19,13 @@ const pokemonSchema = new mongoose_1.Schema({
 const itemSchema = new mongoose_1.Schema({
     count: { type: Number },
     name: { type: String },
-    effect: { type: String }
+    effect: { type: String },
+    cost: { type: Number },
+    image: { type: String }
 });
 const bagSchema = new mongoose_1.Schema({
     items: {
-        countable: { type: [{}] }
+        countable: { type: [itemSchema] }
     }
 });
 const userSchema = new mongoose_1.Schema({

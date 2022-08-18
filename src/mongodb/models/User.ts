@@ -19,12 +19,14 @@ const pokemonSchema = new Schema({
 const itemSchema = new Schema({
   count: { type: Number },
   name: { type: String },
-  effect: { type: String }
+  effect: { type: String },
+  cost: { type: Number },
+  image: { type: String }
 });
 
 const bagSchema = new Schema({
   items: {
-    countable: { type: [{}] }
+    countable: { type: [itemSchema] }
   }
 });
 
