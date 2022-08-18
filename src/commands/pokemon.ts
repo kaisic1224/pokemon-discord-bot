@@ -123,7 +123,7 @@ module.exports = {
       await connectToDB();
 
       if (i.customId === "Catch") {
-        // if they choose to catch, find the document, and create it if it doesn't exist
+        // if they choose to catch, find the document and update it, but create it if it doesn't exist
         try {
           const user = await User.findOneAndUpdate(
             {
@@ -147,12 +147,12 @@ module.exports = {
             new ActionRowBuilder<ButtonBuilder>().addComponents(
               new ButtonBuilder()
                 .setStyle(ButtonStyle.Success)
-                .setEmoji("\u2714" as APIMessageComponentEmoji)
+                .setEmoji({ name: "\u2714" })
                 .setCustomId("Yes"),
               new ButtonBuilder()
                 .setStyle(ButtonStyle.Danger)
                 .setCustomId("Don't catch")
-                .setLabel("Don't catch")
+                .setEmoji({ name: "\u2716" })
             );
           await i.followUp({
             content: `Would you like to give it a name?`,

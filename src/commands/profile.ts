@@ -2,8 +2,10 @@ import {
   ChatInputCommandInteraction,
   EmbedBuilder,
   SlashCommandBuilder,
-  User
+  User as discordUser
 } from "discord.js";
+import User from "../mongodb/models/User";
+import connectToDB from "../mongodb/mongo";
 
 const data = new SlashCommandBuilder()
   .setName("profile")
@@ -16,14 +18,20 @@ module.exports = {
   data,
   execute: async (interaction: ChatInputCommandInteraction) => {
     const { client, member, options } = interaction;
+    await interaction.deferReply();
+    await connectToDB();
 
     const user = options.get("user")?.user ?? member?.user;
 
+    const dbUser = await User.find({
+      tag: `${user?.username}#${user?.discriminator}`
+    }).exec();
+
     const embed = new EmbedBuilder()
       .setTitle(`${user?.username}#${user?.discriminator}`)
-      .setThumbnail((user as User).displayAvatarURL())
+      .setThumbnail((user as discordUser).displayAvatarURL())
       .setDescription(`${user?.username}'s profile`)
-      .setFields([{ name: "\u200B", value: "xp: full\njaja: lmao" }]);
+      .setFields([{ name: "\u200B", value: "xp: 🟩🟩🟩🟩🟩🟩" }]);
 
     await interaction.reply({ embeds: [embed] });
   }
