@@ -16,7 +16,16 @@ const pokemonSchema = new mongoose_1.Schema({
     },
     encounter: { type: String }
 });
-const bagSchema = new mongoose_1.Schema({});
+const itemSchema = new mongoose_1.Schema({
+    count: { type: Number },
+    name: { type: String },
+    effect: { type: String }
+});
+const bagSchema = new mongoose_1.Schema({
+    items: {
+        countable: { type: [{}] }
+    }
+});
 const userSchema = new mongoose_1.Schema({
     tag: {
         type: String,
