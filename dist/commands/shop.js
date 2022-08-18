@@ -22,6 +22,6 @@ module.exports = {
     data: shopCommand,
     execute: (interaction) => __awaiter(void 0, void 0, void 0, function* () {
         const items = yield (yield axios_1.default.get("https://pokeapi.co/api/v2/item?limit=100000&offset=0")).data.results;
-        const shopEmbed = new discord_js_1.EmbedBuilder().setTitle("Shop");
+        const shopEmbed = new discord_js_1.EmbedBuilder().setTitle("Shop").setDescription("LOL");
     })
 };
