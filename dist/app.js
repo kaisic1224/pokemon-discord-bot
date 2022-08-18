@@ -19,6 +19,9 @@ const client = new discord_js_1.Client({
         discord_js_1.GatewayIntentBits.MessageContent
     ]
 });
+const refreshShop = () => __awaiter(void 0, void 0, void 0, function* () {
+    let timeout = setTimeout(() => { }, 24);
+});
 client.once("ready", () => {
     var _a;
     console.log(`Logged in as ${(_a = client.user) === null || _a === void 0 ? void 0 : _a.tag}!`);

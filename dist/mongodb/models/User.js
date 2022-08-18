@@ -16,6 +16,7 @@ const pokemonSchema = new mongoose_1.Schema({
     },
     encounter: { type: String }
 });
+const bagSchema = new mongoose_1.Schema({});
 const userSchema = new mongoose_1.Schema({
     tag: {
         type: String,
@@ -26,7 +27,8 @@ const userSchema = new mongoose_1.Schema({
     },
     lastClaimed: { type: Number, default: 0 },
     totalEncounters: { type: Number },
-    money: { type: Number, default: 0 }
+    money: { type: Number, default: 0 },
+    inventory: { type: bagSchema }
 });
 const User = mongoose_1.models.Mentor || (0, mongoose_1.model)("User", userSchema);
 exports.default = User;
