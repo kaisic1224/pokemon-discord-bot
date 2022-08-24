@@ -8,9 +8,48 @@ import {
 import axios from "axios";
 axios.defaults;
 
-type attribute = "countable" | "consumable" | "usable-in-battle" | "holdable";
+type attribute =
+  | "countable"
+  | "consumable"
+  | "usable-in-battle"
+  | "holdable"
+  | "stat-boosts"
+  | "medicine"
+  | "standard-balls"
+  | "other"
+  | "dynamax-crystals"
+  | "curry-ingredients"
+  | "nature-mints"
+  | "jewels"
+  | "data-cards"
+  | "apricorn-box"
+  | "apricorn-balls"
+  | "flutes"
+  | "mulch"
+  | "status-cures"
+  | "revival"
+  | "pp-recovery"
+  | "healing"
+  | "vitamins"
+  | "loot"
+  | "unused"
+  | "type-enhancement"
+  | "species-specific"
+  | "plates"
+  | "training"
+  | "bad-held-items"
+  | "effort-training"
+  | "choice"
+  | "held-items"
+  | "evolution"
+  | "collectibles"
+  | "baking-only"
+  | "picky-healing"
+  | "in-a-pinch"
+  | "effort-drop"
+  | "type-protection";
 
-interface item {
+export interface item {
   attributes: { name: attribute; url: string }[];
   category: {
     name: string;
@@ -20,7 +59,7 @@ interface item {
   effect_entries: {
     effect: string;
     language: { name: string; url: string };
-    short_effect: string;
+    short_effect?: string;
   }[];
   flavor_text_entries: {
     language: { name: string; url: string };

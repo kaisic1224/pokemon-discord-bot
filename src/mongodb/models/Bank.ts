@@ -6,7 +6,9 @@ const bankSchema = new Schema({
       {
         name: { type: String },
         stock: { type: Number },
-        effect: { type: String }
+        flavour_text: { type: String },
+        cost: { type: Number },
+        image: { type: String }
       }
     ]
   }
