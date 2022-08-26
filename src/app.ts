@@ -4,8 +4,11 @@ import axios from "axios";
 import { item } from "./commands/shop";
 import Bank from "./mongodb/models/Bank";
 import connectToDB from "./mongodb/mongo";
+import Redis from "ioredis";
 axios.defaults;
 const getRandomInt = require("./commands/pokemon").getRandomInt;
+
+const redis = new Redis(process.env.REDIS_URL!);
 
 const client = new Client({
   intents: [
@@ -46,7 +49,6 @@ const refreshShop = async () => {
     { items: shop },
     { upsert: true, new: true }
   ).exec();
-  console.log(newShop);
 };
 
 client.once("ready", async () => {

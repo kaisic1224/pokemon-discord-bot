@@ -17,8 +17,10 @@ const discord_js_1 = require("discord.js");
 const axios_1 = __importDefault(require("axios"));
 const Bank_1 = __importDefault(require("./mongodb/models/Bank"));
 const mongo_1 = __importDefault(require("./mongodb/mongo"));
+const ioredis_1 = __importDefault(require("ioredis"));
 axios_1.default.defaults;
 const getRandomInt = require("./commands/pokemon").getRandomInt;
+const redis = new ioredis_1.default(process.env.REDIS_URL);
 const client = new discord_js_1.Client({
     intents: [
         discord_js_1.GatewayIntentBits.Guilds,
@@ -48,7 +50,6 @@ const refreshShop = () => __awaiter(void 0, void 0, void 0, function* () {
         shop.push(profile);
     }
     const newShop = yield Bank_1.default.findOneAndUpdate(undefined, { items: shop }, { upsert: true, new: true }).exec();
-    console.log(newShop);
 });
 client.once("ready", () => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
