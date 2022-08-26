@@ -42,6 +42,7 @@ const getPokemon = new builders_1.SlashCommandBuilder()
     .setDescription("gets pokemon from poke api");
 module.exports = {
     data: getPokemon,
+    getRandomInt: getRandomInt,
     execute: (interaction) => __awaiter(void 0, void 0, void 0, function* () {
         var _a;
         const { member } = interaction;
@@ -57,7 +58,7 @@ module.exports = {
                 type.charAt(0).toUpperCase() +
                 type.substring(1) +
                 "```",
-            inline: true,
+            inline: true
         })))
             .setColor(typeMap.get(pokemon2.types[0]));
         const confirmCatch = new discord_js_1.ActionRowBuilder().addComponents(new builders_1.ButtonBuilder()
@@ -70,14 +71,14 @@ module.exports = {
         const filter = (i) => i.customId === "Catch" || i.customId === "Don't catch";
         const collector = (_a = interaction.channel) === null || _a === void 0 ? void 0 : _a.createMessageComponentCollector({
             filter: filter,
-            time: 5000,
+            time: 5000
         });
         collector === null || collector === void 0 ? void 0 : collector.on("collect", (i) => __awaiter(void 0, void 0, void 0, function* () {
             // Set buttons to disabled
             yield interaction.editReply({
                 components: [
-                    confirmCatch.setComponents(confirmCatch.components.map((button) => button.setDisabled())),
-                ],
+                    confirmCatch.setComponents(confirmCatch.components.map((button) => button.setDisabled()))
+                ]
             });
             // Make the bot send a thinking message so message does not expire while it connects to database and queries other informations
             yield i.deferReply();
@@ -86,13 +87,13 @@ module.exports = {
                 // if they choose to catch, find the document and update it, but create it if it doesn't exist
                 try {
                     const user = yield User_1.default.findOneAndUpdate({
-                        tag: interaction.user.tag,
+                        tag: interaction.user.tag
                     }, {
                         tag: interaction.user.tag,
                         // add new pokemon to their array
                         $push: { pokemon: pokemon2 },
                         // increase their encounter number by 1
-                        $inc: { totalEncounters: 1 },
+                        $inc: { totalEncounters: 1 }
                     }, { upsert: true, new: true, setDefaultsOnInsert: true }).exec();
                     console.log(user);
                     yield i.editReply(`${interaction.user.tag} has caught ${pokemon2.name} sucessfully!`);
@@ -105,7 +106,7 @@ module.exports = {
                         .setEmoji({ name: "\u2716" }));
                     yield i.followUp({
                         content: `Would you like to give it a name?`,
-                        components: [pokemonName],
+                        components: [pokemonName]
                     });
                 }
                 catch (err) {
@@ -117,7 +118,7 @@ module.exports = {
             }
         }));
         yield interaction.reply({ embeds: [pokemon1], components: [confirmCatch] });
-    }),
+    })
 };
 const fetchPokemon = (pokemon) => __awaiter(void 0, void 0, void 0, function* () {
     var _b;
@@ -133,6 +134,7 @@ const fetchPokemon = (pokemon) => __awaiter(void 0, void 0, void 0, function* ()
     // Fetch the quote for encounter method but make sure it is in english
     const encounterMethodRes = yield axios_1.default.get(encounterUrl);
     const encounterMethod = encounterMethodRes.data.names.filter((item) => item.language.name === "en")[0].name;
+    // Create the pokemon data by using information from fetch and selecting abilities and skills at random with random integer function
     const retval = {
         name: singlePoke.data.name,
         image: singlePoke.data.sprites.front_default,
@@ -142,7 +144,7 @@ const fetchPokemon = (pokemon) => __awaiter(void 0, void 0, void 0, function* ()
         base_stat: singlePoke.data.stats[0].base_stat,
         ability: singlePoke.data.moves[getRandomInt(0, numAbilities)],
         skill: singlePoke.data.moves[getRandomInt(0, numMoves)],
-        encounter: encounterMethod,
+        encounter: encounterMethod
     };
     return retval;
 });
@@ -151,4 +153,5 @@ function getRandomInt(min, max) {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
 }
+exports.getRandomInt = getRandomInt;
 exports.getRandomInt = getRandomInt;

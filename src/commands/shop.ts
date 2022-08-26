@@ -6,11 +6,51 @@ import {
   ButtonBuilder
 } from "discord.js";
 import axios from "axios";
+import connectToDB from "../mongodb/mongo";
 axios.defaults;
 
-type attribute = "countable" | "consumable" | "usable-in-battle" | "holdable";
+type attribute =
+  | "countable"
+  | "consumable"
+  | "usable-in-battle"
+  | "holdable"
+  | "stat-boosts"
+  | "medicine"
+  | "standard-balls"
+  | "other"
+  | "dynamax-crystals"
+  | "curry-ingredients"
+  | "nature-mints"
+  | "jewels"
+  | "data-cards"
+  | "apricorn-box"
+  | "apricorn-balls"
+  | "flutes"
+  | "mulch"
+  | "status-cures"
+  | "revival"
+  | "pp-recovery"
+  | "healing"
+  | "vitamins"
+  | "loot"
+  | "unused"
+  | "type-enhancement"
+  | "species-specific"
+  | "plates"
+  | "training"
+  | "bad-held-items"
+  | "effort-training"
+  | "choice"
+  | "held-items"
+  | "evolution"
+  | "collectibles"
+  | "baking-only"
+  | "picky-healing"
+  | "in-a-pinch"
+  | "effort-drop"
+  | "type-protection";
 
-interface item {
+export interface item {
   attributes: { name: attribute; url: string }[];
   category: {
     name: string;
@@ -20,7 +60,7 @@ interface item {
   effect_entries: {
     effect: string;
     language: { name: string; url: string };
-    short_effect: string;
+    short_effect?: string;
   }[];
   flavor_text_entries: {
     language: { name: string; url: string };
@@ -56,6 +96,8 @@ module.exports = {
     const items = await (
       await axios.get("https://pokeapi.co/api/v2/item?limit=100000&offset=0")
     ).data.results;
+    await interaction.deferReply();
+    await connectToDB();
     const shopEmbed = new EmbedBuilder().setTitle("Shop").setDescription("LOL");
   }
 };
