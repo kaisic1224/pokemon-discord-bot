@@ -7,6 +7,7 @@ import {
 } from "discord.js";
 import axios from "axios";
 import connectToDB from "../mongodb/mongo";
+import Bank from "../mongodb/models/Bank";
 axios.defaults;
 
 type attribute =
@@ -86,6 +87,17 @@ export interface item {
   };
 }
 
+export interface itemProfile {
+  name: string;
+  flavour_text: string;
+  cost: number;
+  image: string | null;
+  stock: number;
+}
+
+const RARE_CANDY_URL =
+  "https://static.wikia.nocookie.net/pokemon/images/5/53/Rare_Candy_Artwork.png/revision/latest/scale-to-width/360?cb=20110325230302";
+
 const shopCommand = new SlashCommandBuilder()
   .setName("shop")
   .setDescription("Preview whstringat is on auction in the shop currently");
@@ -93,11 +105,23 @@ const shopCommand = new SlashCommandBuilder()
 module.exports = {
   data: shopCommand,
   execute: async (interaction: ChatInputCommandInteraction) => {
-    const items = await (
-      await axios.get("https://pokeapi.co/api/v2/item?limit=100000&offset=0")
-    ).data.results;
     await interaction.deferReply();
     await connectToDB();
-    const shopEmbed = new EmbedBuilder().setTitle("Shop").setDescription("LOL");
+    const shop: Record<"items", Array<itemProfile>> | null =
+      await Bank.findOne();
+    const dailyItems = shop!.items
+      .slice(0, 4)
+      .map((item) =>
+        new EmbedBuilder()
+          .setURL("https://www.discord.com")
+          .setImage(item.image ?? RARE_CANDY_URL)
+      );
+    const shopEmbeds = [
+      new EmbedBuilder()
+        .setTitle("Daily Shop")
+        .setURL("https://www.discord.com"),
+      ...dailyItems
+    ];
+    await interaction.editReply({ embeds: shopEmbeds });
   }
 };

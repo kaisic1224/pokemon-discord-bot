@@ -15,16 +15,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const axios_1 = __importDefault(require("axios"));
 const mongo_1 = __importDefault(require("../mongodb/mongo"));
+const Bank_1 = __importDefault(require("../mongodb/models/Bank"));
 axios_1.default.defaults;
+const RARE_CANDY_URL = "https://static.wikia.nocookie.net/pokemon/images/5/53/Rare_Candy_Artwork.png/revision/latest/scale-to-width/360?cb=20110325230302";
 const shopCommand = new discord_js_1.SlashCommandBuilder()
     .setName("shop")
     .setDescription("Preview whstringat is on auction in the shop currently");
 module.exports = {
     data: shopCommand,
     execute: (interaction) => __awaiter(void 0, void 0, void 0, function* () {
-        const items = yield (yield axios_1.default.get("https://pokeapi.co/api/v2/item?limit=100000&offset=0")).data.results;
         yield interaction.deferReply();
         yield (0, mongo_1.default)();
-        const shopEmbed = new discord_js_1.EmbedBuilder().setTitle("Shop").setDescription("LOL");
+        const shop = yield Bank_1.default.findOne();
+        const dailyItems = shop.items.map((item) => {
+            var _a;
+            return new discord_js_1.EmbedBuilder()
+                .setURL("https://www.discord.com")
+                .setImage((_a = item.image) !== null && _a !== void 0 ? _a : RARE_CANDY_URL);
+        });
+        const shopEmbeds = [
+            new discord_js_1.EmbedBuilder()
+                .setTitle("Daily Shop")
+                .setURL("https://www.discord.com"),
+            ...dailyItems
+        ];
+        yield interaction.editReply({ embeds: shopEmbeds });
     })
 };

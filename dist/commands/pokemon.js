@@ -106,7 +106,8 @@ module.exports = {
                         .setEmoji({ name: "\u2716" }));
                     yield i.followUp({
                         content: `Would you like to give it a name?`,
-                        components: [pokemonName]
+                        components: [pokemonName],
+                        ephemeral: true
                     });
                 }
                 catch (err) {

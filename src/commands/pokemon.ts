@@ -155,7 +155,8 @@ module.exports = {
             );
           await i.followUp({
             content: `Would you like to give it a name?`,
-            components: [pokemonName]
+            components: [pokemonName],
+            ephemeral: true
           });
         } catch (err) {
           console.log(err);

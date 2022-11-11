@@ -4,11 +4,8 @@ import axios from "axios";
 import { item } from "./commands/shop";
 import Bank from "./mongodb/models/Bank";
 import connectToDB from "./mongodb/mongo";
-import Redis from "ioredis";
 axios.defaults;
 const getRandomInt = require("./commands/pokemon").getRandomInt;
-
-const redis = new Redis(process.env.REDIS_URL!);
 
 const client = new Client({
   intents: [
@@ -30,8 +27,9 @@ const refreshShop = async () => {
   for (let index = 0; index < 8; index++) {
     let randomIndex = getRandomInt(0, items.length - 1);
     const resp = await axios.get(items[randomIndex].url);
-    if ((resp.data as item).category.name === "asd") {
-      console.log("first");
+    if ((resp.data as item).category.name === "dynamax-crystals") {
+      index--;
+      continue;
     }
     const profile = {
       name: (resp.data as item).name,
