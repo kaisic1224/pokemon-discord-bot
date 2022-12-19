@@ -12,7 +12,8 @@ const client = new Client({
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildVoiceStates
   ]
 });
 
@@ -51,10 +52,10 @@ const refreshShop = async () => {
 
 client.once("ready", async () => {
   console.log(`Logged in as ${client.user?.tag}!`);
-  refreshShop();
-  setInterval(() => {
-    refreshShop();
-  }, 24 * 60 * 60 * 1000);
+  //   refreshShop();
+  //   setInterval(() => {
+  //     refreshShop();
+  //   }, 24 * 60 * 60 * 1000);
 });
 
 client.on("interactionCreate", async (interaction) => {
